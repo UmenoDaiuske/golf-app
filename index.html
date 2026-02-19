@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<!-- saved from url=(0157)https://www.genspark.ai/api/code_sandbox_light/preview/b27be5b2-6498-42a7-b3a8-2102ed30aef4/index.html?canvas_history_id=af30815e-5830-4ed8-af8f-9564b0028a4d -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゴルフログ＋AIキャディ</title>
+    <script src="./ゴルフログ＋AIキャディ_files/saved_resource"></script>
+    <link rel="stylesheet" href="./ゴルフログ＋AIキャディ_files/all.min.css">
+    <style>
+        .golf-green { background-color: #2d5a27; }
+        .golf-green-light { background-color: #4a7c59; }
+        .golf-tee { background-color: #f4e4bc; }
+        .golf-fairway { background-color: #85a96d; }
+        .golf-bunker { background-color: #e6d3a3; }
+        .shot-input {
+            min-height: 48px;
+            font-size: 16px;
+        }
+        @media (max-width: 640px) {
+            .shot-input {
+                min-height: 44px;
+                font-size: 14px;
+            }
+        }
+        
+        /* タブ切り替えアニメーション */
+        .tab-content {
+            transition: opacity 0.2s ease-in-out;
+        }
+        
+        .nav-tab {
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .nav-tab:hover {
+            transform: translateY(-1px);
+        }
+        
+        .nav-tab.active {
+            font-weight: 600;
+        }
+        
+        /* スマホ最適化 */
+        @media (max-width: 640px) {
+            .nav-tab {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
+            
+            .nav-tab i {
+                display: block;
+                margin: 0 auto 2px auto;
+                font-size: 14px;
+            }
+        }
+        
+        /* ボタンクリック時のフィードバック */
+        .nav-tab:active {
+            transform: translateY(0);
+        }
+        
+        /* コンテンツ表示高速化 */
+        .tab-content:not(.hidden) {
+            animation: fadeIn 0.2s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width: 640px){.container{max-width:640px}}@media (min-width: 768px){.container{max-width:768px}}@media (min-width: 1024px){.container{max-width:1024px}}@media (min-width: 1280px){.container{max-width:1280px}}@media (min-width: 1536px){.container{max-width:1536px}}.mx-auto{margin-left:auto;margin-right:auto}.mb-2{margin-bottom:0.5rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mr-1{margin-right:0.25rem}.mr-2{margin-right:0.5rem}.mb-3{margin-bottom:0.75rem}.mt-6{margin-top:1.5rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-64{height:16rem}.min-h-screen{min-height:100vh}.w-full{width:100%}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-between{justify-content:space-between}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-x-1 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.25rem * var(--tw-space-x-reverse));margin-left:calc(0.25rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-3 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.75rem * var(--tw-space-x-reverse));margin-left:calc(0.75rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.rounded-lg{border-radius:0.5rem}.rounded{border-radius:0.25rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-b-2{border-bottom-width:2px}.border-l-4{border-left-width:4px}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-green-600{--tw-border-opacity:1;border-color:rgb(22 163 74 / var(--tw-border-opacity, 1))}.border-transparent{border-color:transparent}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-gray-500{--tw-border-opacity:1;border-color:rgb(107 114 128 / var(--tw-border-opacity, 1))}.border-green-500{--tw-border-opacity:1;border-color:rgb(34 197 94 / var(--tw-border-opacity, 1))}.border-yellow-500{--tw-border-opacity:1;border-color:rgb(234 179 8 / var(--tw-border-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-green-600{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-gray-500{--tw-bg-opacity:1;background-color:rgb(107 114 128 / var(--tw-bg-opacity, 1))}.p-6{padding:1.5rem}.p-4{padding:1rem}.p-3{padding:0.75rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}.text-center{text-align:center}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-green-600{--tw-text-opacity:1;color:rgb(22 163 74 / var(--tw-text-opacity, 1))}.text-green-800{--tw-text-opacity:1;color:rgb(22 101 52 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:bg-green-700:hover{--tw-bg-opacity:1;background-color:rgb(21 128 61 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-600:hover{--tw-bg-opacity:1;background-color:rgb(75 85 99 / var(--tw-bg-opacity, 1))}.hover\:text-green-600:hover{--tw-text-opacity:1;color:rgb(22 163 74 / var(--tw-text-opacity, 1))}.focus\:border-green-500:focus{--tw-border-opacity:1;border-color:rgb(34 197 94 / var(--tw-border-opacity, 1))}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-green-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(34 197 94 / var(--tw-ring-opacity, 1))}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.lg\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}</style><script src="./ゴルフログ＋AIキャディ_files/diffDOM.js.ダウンロード"></script></head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- ヘッダー -->
+    <header class="golf-green text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-bold flex items-center">
+                    <i class="fas fa-golf-ball mr-2"></i>
+                    ゴルフログ＋AIキャディ
+                </h1>
+                <div class="flex space-x-2">
+                    <button id="importBtn" class="bg-white text-green-800 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100">
+                        <i class="fas fa-upload mr-1"></i>インポート
+                    </button>
+                    <button id="exportBtn" class="bg-white text-green-800 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-100">
+                        <i class="fas fa-download mr-1"></i>エクスポート
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ナビゲーション -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="container mx-auto px-4">
+            <div class="flex space-x-1">
+                <button id="navInput" class="nav-tab px-4 py-3 text-sm font-medium border-b-2 border-transparent text-gray-600">
+                    <i class="fas fa-plus-circle mr-1"></i>ラウンド入力
+                </button>
+                <button id="navCaddie" class="nav-tab px-4 py-3 text-sm font-medium border-b-2 hover:text-green-600 active border-green-600 text-green-600">
+                    <i class="fas fa-robot mr-1"></i>AIキャディ
+                </button>
+                <button id="navLogs" class="nav-tab px-4 py-3 text-sm font-medium border-b-2 hover:text-green-600 border-transparent text-gray-600">
+                    <i class="fas fa-list mr-1"></i>ログ閲覧
+                </button>
+                <button id="navAnalysis" class="nav-tab px-4 py-3 text-sm font-medium border-b-2 hover:text-green-600 border-transparent text-gray-600">
+                    <i class="fas fa-chart-bar mr-1"></i>分析
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- ラウンド入力画面 -->
+        <section id="inputSection" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">ラウンド情報</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">コース名</label>
+                        <input type="text" id="courseName" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shot-input" placeholder="例：鳴尾ゴルフ倶楽部">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ホール</label>
+                        <select id="holeNumber" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shot-input">
+                            <option value="">選択</option>
+                            <option value="1">1番ホール</option>
+                            <option value="2">2番ホール</option>
+                            <option value="3">3番ホール</option>
+                            <option value="4">4番ホール</option>
+                            <option value="5">5番ホール</option>
+                            <option value="6">6番ホール</option>
+                            <option value="7">7番ホール</option>
+                            <option value="8">8番ホール</option>
+                            <option value="9">9番ホール</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">パー</label>
+                        <select id="par" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shot-input">
+                            <option value="">選択</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">距離（ヤード）</label>
+                        <input type="number" id="totalDistance" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shot-input" placeholder="例：363">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ショット入力 -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-gray-800">ショット記録</h2>
+                    <button id="addShotBtn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-plus mr-1"></i>ショット追加
+                    </button>
+                </div>
+                
+                <div id="shotsContainer">
+                    <!-- ショット入力フィールドが動的に追加されます -->
+                </div>
+
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button id="saveRoundBtn" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                        <i class="fas fa-save mr-2"></i>保存
+                    </button>
+                    <button id="clearFormBtn" class="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors font-medium">
+                        <i class="fas fa-eraser mr-2"></i>クリア
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- AIキャディ画面 -->
+        <section id="caddieSection" class="tab-content">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-6">
+                    <i class="fas fa-robot mr-2 text-green-600"></i>AIキャディ
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 入力フォーム -->
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">残り距離（ヤード）</label>
+                            <input type="number" id="caddieDistance" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shot-input" placeholder="例：150">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ライ</label>
+                            <select id="caddieLie" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shot-input">
+                                <option value="">選択</option>
+                                <option value="tee">ティーショット</option>
+                                <option value="fairway">フェアウェイ</option>
+                                <option value="rough">ラフ</option>
+                                <option value="bunker">バンカー</option>
+                                <option value="green">グリーン</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">傾斜</label>
+                            <select id="caddieSlope" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 shot-input">
+                                <option value="">選択</option>
+                                <option value="flat">フラット</option>
+                                <option value="uphill">アップヒル</option>
+                                <option value="downhill">ダウンヒル</option>
+                                <option value="sidehill">サイドヒル</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">障害物</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" value="bunker" class="mr-2">
+                                    <span class="text-sm">バンカー</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" value="water" class="mr-2">
+                                    <span class="text-sm">池</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" value="trees" class="mr-2">
+                                    <span class="text-sm">木々</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" value="ob" class="mr-2">
+                                    <span class="text-sm">OB</span>
+                                </label>
+                            </div>
+                        </div>
+                        <button id="getAdviceBtn" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors font-medium">
+                            <i class="fas fa-comments mr-2"></i>アドバイスをもらう
+                        </button>
+                    </div>
+
+                    <!-- アドバイス表示 -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="font-medium text-gray-800 mb-3">AIキャディからのアドバイス</h3>
+                        <div id="adviceResult" class="space-y-3">
+            <div class="space-y-3">
+                <div class="bg-white p-3 rounded border-l-4 border-green-500">
+                    <div class="font-medium text-gray-800">推奨クラブ</div>
+                    <div class="text-lg font-bold text-green-600">8I</div>
+                </div>
+                <div class="bg-white p-3 rounded border-l-4 border-blue-500">
+                    <div class="font-medium text-gray-800">意識すること</div>
+                    <div class="text-sm text-gray-700">正確なショットを心がける</div>
+                </div>
+                <div class="bg-white p-3 rounded border-l-4 border-yellow-500">
+                    <div class="font-medium text-gray-800">リスク評価</div>
+                    <div class="text-sm text-green-600">低リスク</div>
+                </div>
+                <div class="bg-white p-3 rounded border-l-4 border-gray-500">
+                    <div class="font-medium text-gray-800">理由</div>
+                    <div class="text-sm text-gray-700">120ヤードのフェアウェイからは、8Iが適切です。正確なショットを心がける。</div>
+                </div>
+            </div>
+        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ログ閲覧画面 -->
+        <section id="logsSection" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold text-gray-800">
+                        <i class="fas fa-list mr-2 text-green-600"></i>ラウンドログ
+                    </h2>
+                    <div class="flex space-x-2">
+                        <select id="filterCourse" class="px-3 py-2 border border-gray-300 rounded-lg text-sm"><option value="">すべてのコース</option></select>
+                        <input type="date" id="filterDate" class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                    </div>
+                </div>
+                
+                <div id="logsContainer"><p class="text-gray-500 text-center py-8">ログがありません。まずはラウンドを入力してください。</p></div>
+            </div>
+        </section>
+
+        <!-- 分析画面 -->
+        <section id="analysisSection" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- クラブ別平均距離 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">クラブ別平均距離</h3>
+                    <div id="clubDistanceChart" class="h-64"><p class="text-gray-500 text-center">データがありません</p></div>
+                </div>
+
+                <!-- スコア推移 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">スコア推移</h3>
+                    <div id="scoreTrendChart" class="h-64"><p class="text-gray-500 text-center">データがありません</p></div>
+                </div>
+
+                <!-- ミス傾向 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">ミス傾向</h3>
+                    <div id="missPatternChart" class="h-64"><p class="text-gray-500 text-center">データがありません</p></div>
+                </div>
+
+                <!-- 統計情報 -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">統計情報</h3>
+                    <div id="statistics" class="space-y-3">
+            <div class="flex justify-between">
+                <span class="text-gray-600">総ラウンド数:</span>
+                <span class="font-medium">0ラウンド</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-600">総ショット数:</span>
+                <span class="font-medium">0打</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-600">平均スコア:</span>
+                <span class="font-medium">0打</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-600">最頻パー:</span>
+                <span class="font-medium">N/A</span>
+            </div>
+        </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ファイル入力（非表示） -->
+    <input type="file" id="fileInput" accept=".json,.txt" class="hidden">
+
+    <!-- JavaScript -->
+    <script src="./app.js"></script>
+    </body>
+    </html>
